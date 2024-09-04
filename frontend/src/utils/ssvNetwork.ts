@@ -1,19 +1,34 @@
-import { SSV_TOKEN_ABI, SSV_TOKEN_ADDRESS } from "@/constants/SSVTOken";
+import { SSV_TOKEN_ABI, SSV_TOKEN_ADDRESS } from "@/constants/SSVToken";
 import {
   createPublicClient,
   createWalletClient,
   http,
+  parseEther,
   PublicClient,
   WalletClient,
 } from "viem";
 import { SSVKeys, KeyShares, KeySharesItem, SSVKeysException } from "ssv-keys";
-import { SSV_NETWORK_ADDRESS } from "@/constants/SSVNetwork";
+import { SSV_NETWORK_ABI, SSV_NETWORK_ADDRESS } from "@/constants/SSVNetwork";
 import { NonceScanner } from "ssv-scanner";
 import keystore from "./test.keystore.json";
 import { privateKeyToAccount } from "viem/accounts";
 import { holesky } from "viem/chains";
+import axios from "axios";
 
 // 1. Fetch all the available operators to be shown for creating the cluster
+const getOperators = async (totalReqOperators: number) => {
+  try {
+    // axios API call to fetch all the available operators
+    // Fetch all the available operators
+    const response = await axios.get(
+      `https://api.ssv.network/api/v4/holesky/operators?page=1&perPage=${totalReqOperators}`
+    );
+    const operators = response.data.operators;
+    return operators;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // 2. Create cluster and distribute keys transaction
 interface DistibuteKeysParam {
@@ -80,11 +95,56 @@ export const distributeKeys = async ({
 
     console.log(payload);
     console.log(keyShares.toJson());
+    return payload;
   } catch (error) {
     console.log(error);
   }
 };
 
+// Register Validator
+export const registerValidator = async (
+  publicClient: PublicClient,
+  walletClient: WalletClient,
+  payload: any
+) => {
+  try {
+    const { request } = await publicClient.simulateContract({
+      account: walletClient.account,
+      address: SSV_NETWORK_ADDRESS,
+      abi: SSV_NETWORK_ABI,
+      functionName: "registerValidator",
+      args: [
+        payload.publicKey,
+        payload.operatorIds,
+        payload.sharesData,
+        parseEther("1.5"),
+        {
+          validatorCount: 0,
+          networkFeeIndex: BigInt(0),
+          index: BigInt(0),
+          active: true,
+          balance: BigInt(0),
+        },
+      ],
+    });
+
+    const hash = await walletClient.writeContract(request);
+    console.log("hash", hash);
+
+    const txReciept = await publicClient.waitForTransactionReceipt({
+      hash: hash,
+    });
+
+    return {
+      txHash: hash,
+      txReciept: txReciept,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Get nonce
 export const getNextSSVNonce = async (
   ownerAddress: string
 ): Promise<number | undefined> => {
