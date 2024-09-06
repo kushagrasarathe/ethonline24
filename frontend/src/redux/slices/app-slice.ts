@@ -4,6 +4,7 @@ import { APP } from "../constants";
 import { SSVOperator, SSVOperatorsData } from "@/types/server";
 
 const initialState: TAppState = {
+  eigenpodAddress: "",
   ssvOperatorsData: {},
   selectedOperators: [],
   selectedClusterSize: 4,
@@ -13,6 +14,10 @@ const appSlice = createSlice({
   name: APP,
   initialState,
   reducers: {
+    setEigenpodAddress: (state, action: PayloadAction<string>) => {
+      state.eigenpodAddress = action.payload;
+    },
+
     setSsvOperatorsData: (
       state,
       action: PayloadAction<{ page: number; data: SSVOperatorsData }>

@@ -11,15 +11,16 @@ import { TriangleAlert } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import CreateEigenPodForm from "./eigen-pod-form";
 import CreateSsvOperatorsCluster from "../create-ssv-operators-cluster";
+import GenerateKeysFrom from "./generate-keys-from";
 
 function getStepContent(step: number) {
   switch (step) {
     case 1:
       return <CreateEigenPodForm />;
     case 2:
-      return <CreateSsvOperatorsCluster />;
+      return <GenerateKeysFrom />;
     case 3:
-      return <div>form3</div>;
+      return <CreateSsvOperatorsCluster />;
     case 4:
       return <div>form4</div>;
     case 5:

@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { usePathname } from "next/navigation";
+import { WalletConnector } from "@privy-io/react-auth";
+import ConnectWalletButton from "./wallet-connect";
 
 export default function Header() {
   const path = usePathname();
@@ -21,7 +23,9 @@ export default function Header() {
         />
       </Link>
       {isDashboard ? (
-        <div>Connect Wallet Button Here</div>
+        <div>
+          <ConnectWalletButton />
+        </div>
       ) : (
         <Link
           href={"/dashboard"}

@@ -11,6 +11,7 @@ import { appActions } from "@/redux/slices/app-slice";
 import { SSVOperator } from "@/types/server";
 import { Button } from "./ui/button";
 import { ButtonIcon } from "./ui/button-icon";
+import { formatUnits } from "viem";
 
 const clusterSet = ["4", "7", "10", "13"].map(Number);
 
@@ -155,9 +156,11 @@ export default function CreateSsvOperatorsCluster() {
                   <div className="w-2/12">
                     {operator.performance?.["30d"]?.toFixed(2)} %
                   </div>
-                  <div className="w-2/12">{operator?.fee}</div>
+                  <div className="w-2/12">
+                    {formatUnits(BigInt(operator?.fee || 0), 9)}
+                  </div>
                 </div>
-              ))}
+              ))}{" "}
             </div>
           ))}
 
