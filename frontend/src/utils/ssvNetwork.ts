@@ -16,12 +16,13 @@ import { holesky } from "viem/chains";
 import axios from "axios";
 
 // 1. Fetch all the available operators to be shown for creating the cluster
-const getOperators = async (totalReqOperators: number) => {
+export const getSSVOperators = async ({ pageParam }: { pageParam: number }) => {
   try {
     // axios API call to fetch all the available operators
     // Fetch all the available operators
     const response = await axios.get(
-      `https://api.ssv.network/api/v4/holesky/operators?page=1&perPage=${totalReqOperators}`
+      `https://api.ssv.network/api/v4/holesky/operators?ordering=id:asc&page=${pageParam}&perPage=10`
+      // `https://api.ssv.network/api/v4/holesky/operators?page=1&perPage=${totalReqOperators}`
     );
     const operators = response.data.operators;
     return operators;
