@@ -1,4 +1,8 @@
-import { SSVOperator, SSVOperatorsData } from "../server";
+import {
+  SSVOperator,
+  SSVOperatorsData,
+  ValidatiorFundingPeriod,
+} from "../server";
 
 export type TAppState = {
   eigenpodAddress: string;
@@ -10,4 +14,5 @@ export type TAppState = {
   keyStorePassword: string;
   keyStoreFile: File | null;
   depositDataFile: File | null;
+  validatiorFundingPeriod: ValidatiorFundingPeriod | null;
 };

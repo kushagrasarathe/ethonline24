@@ -50,3 +50,11 @@ export interface SSVOperatorsData {
   operators?: SSVOperator[];
   pagination?: Pagination;
 }
+
+export interface ValidatiorFundingPeriod {
+  duration: "six-months" | "one-year";
+  operatorFee: number;
+  networkFee: number;
+  liquidationCollateral: number;
+  totalFunding: number;
+}

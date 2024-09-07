@@ -1,7 +1,11 @@
 import { TAppState } from "@/types/redux/app-state";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { APP } from "../constants";
-import { SSVOperator, SSVOperatorsData } from "@/types/server";
+import {
+  SSVOperator,
+  SSVOperatorsData,
+  ValidatiorFundingPeriod,
+} from "@/types/server";
 
 const initialState: TAppState = {
   eigenpodAddress: "",
@@ -11,6 +15,7 @@ const initialState: TAppState = {
   keyStorePassword: "",
   keyStoreFile: null,
   depositDataFile: null,
+  validatiorFundingPeriod: null,
 };
 
 const appSlice = createSlice({
@@ -67,6 +72,13 @@ const appSlice = createSlice({
 
     setDepositDataFile: (state, action: PayloadAction<File>) => {
       state.depositDataFile = action.payload;
+    },
+
+    setValidatorFundingPeriod: (
+      state,
+      action: PayloadAction<ValidatiorFundingPeriod>
+    ) => {
+      state.validatiorFundingPeriod = action.payload;
     },
   },
 });

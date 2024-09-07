@@ -63,60 +63,58 @@ export default function GenerateKeysFrom() {
       <FormCard
         title="Generate Validator Keystore"
         description="Follow below steps to generate your validator keystore"
-        children={
-          <div className="rounded-xl bg-white py-4">
-            <div className="flex items-center gap-3 border-b border-gray-300 pb-4 px-4">
-              <div className="size-3 bg-green-500 rounded-full" />
-              <div className="size-3 bg-red-500 rounded-full" />
-              <div className="size-3 bg-yellow-500 rounded-full" />
+      >
+        <div className="rounded-xl bg-white py-4">
+          <div className="flex items-center gap-3 border-b border-gray-300 pb-4 px-4">
+            <div className="size-3 bg-green-500 rounded-full" />
+            <div className="size-3 bg-red-500 rounded-full" />
+            <div className="size-3 bg-yellow-500 rounded-full" />
+          </div>
+          <div className="text-black px-4 pt-4 relative rounded bg-muted font-mono text-sm font-semibold space-y-3">
+            <div>
+              1. Download and install the{" "}
+              <Link
+                className="underline"
+                target="_blank"
+                rel="noreferrer noopener"
+                href={
+                  "https://github.com/ethereum/staking-deposit-cli/releases/"
+                }
+              >
+                staking-deposit-cli
+              </Link>{" "}
+              from official GitHub repository.
             </div>
-            <div className="text-black px-4 pt-4 relative rounded bg-muted font-mono text-sm font-semibold space-y-3">
+            <div>
+              2. Navigate to the folder where you have zip, extract it and then
+              open terminal.
+            </div>
+            <div className="space-y-1">
               <div>
-                1. Download and install the{" "}
-                <Link
-                  className="underline"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  href={
-                    "https://github.com/ethereum/staking-deposit-cli/releases/"
-                  }
-                >
-                  staking-deposit-cli
-                </Link>{" "}
-                from official GitHub repository.
+                {" "}
+                3. Use the following command to generate validator keys and
+                deposit data:
               </div>
-              <div>
-                2. Navigate to the folder where you have zip, extract it and
-                then open terminal.
-              </div>
-              <div className="space-y-1">
-                <div>
-                  {" "}
-                  3. Use the following command to generate validator keys and
-                  deposit data:
-                </div>
-                <div className="text-indigo-200 font-normal mt-0.5 block bg-gray-800 py-2 rounded-md">
-                  &nbsp;&nbsp;{" "}
-                  {`./deposit new-mnemonic --num_validators 1 --chain mainnet
+              <div className="text-indigo-200 font-normal mt-0.5 block bg-gray-800 px-3 py-2 rounded-md text-[13px] w-fit">
+                {`./deposit new-mnemonic --num_validators 1 --chain mainnet
                 --eth1_withdrawal_address ${
                   eigenpodAddress ? eigenpodAddress : `[YOUR_EIGENPOD_ADDRESS]`
                 }`}
+              </div>
+              {!eigenpodAddress && (
+                <div className="text-gray-500 font-normal mt-1 block text-xs">
+                  Note: Replace [YOUR_EIGENPOD_ADDRESS] with your EigenPod
+                  address.
                 </div>
-                {!eigenpodAddress && (
-                  <div className="text-gray-500 font-normal mt-1 block text-xs">
-                    Note: Replace [YOUR_EIGENPOD_ADDRESS] with your EigenPod
-                    address.
-                  </div>
-                )}
-              </div>
-              <div className="space-y-1">
-                4. After generating the keys, upload the keystore file and
-                deposit data file below.
-              </div>
+              )}
+            </div>
+            <div className="space-y-1">
+              4. After generating the keys, upload the keystore file and deposit
+              data file below.
             </div>
           </div>
-        }
-      />
+        </div>
+      </FormCard>
 
       <div className="space-y-4">
         <div className="text-2xl font-bold">

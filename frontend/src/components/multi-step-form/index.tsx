@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import CreateEigenPodForm from "./eigen-pod-form";
 import CreateSsvOperatorsCluster from "../create-ssv-operators-cluster";
 import GenerateKeysFrom from "./generate-keys-from";
+import FundingPeriodForm from "./funding-period-form";
 
 function getStepContent(step: number) {
   switch (step) {
@@ -22,7 +23,7 @@ function getStepContent(step: number) {
     case 3:
       return <CreateSsvOperatorsCluster />;
     case 4:
-      return <div>form4</div>;
+      return <FundingPeriodForm />;
     case 5:
       return <div>form5</div>;
     default:

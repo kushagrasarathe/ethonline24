@@ -133,7 +133,7 @@ export default function CreateEigenPodForm() {
           }
         />
 
-        <ArrowDown className="size-12 text-primary mx-auto" />
+        {/* <ArrowDown className="size-12 text-primary mx-auto" />
         <Card className="bg-primary text-secondary rounded-2xl p-2 opacity-60">
           <CardHeader className="pb-3">
             <CardTitle>Connect Validator to EigenPod</CardTitle>
@@ -165,7 +165,7 @@ export default function CreateEigenPodForm() {
               Waiting for Connected Validators
             </ButtonIcon>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );
