@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { ButtonIcon } from "../ui/button-icon";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -6,7 +8,13 @@ import Link from "next/link";
 import { ArrowDown, CopyIcon } from "lucide-react";
 import CreateSsvOperatorsCluster from "../create-ssv-operators-cluster";
 import { toast } from "@/hooks/use-toast";
-import { useAppStore } from "@/redux/hooks";
+import { useAppDispatch, useAppStore } from "@/redux/hooks";
+import { appActions } from "@/redux/slices/app-slice";
+import { deployEigenPod, getEigenPod } from "@/utils/eigenLayer";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { createWalletClient, custom, zeroAddress } from "viem";
+import { holesky } from "viem/chains";
 
 interface FormCardProps {
   title: string;
@@ -16,8 +24,64 @@ interface FormCardProps {
 }
 
 export default function CreateEigenPodForm() {
-  // const { eigenpodAddress } = useAppStore();
-  const [eigenpodAddress, setEigenpodAddress] = React.useState("dasd");
+  const [isCreating, setIsCreating] = useState(false);
+  const { eigenpodAddress } = useAppStore();
+  const dispatch = useAppDispatch();
+
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+  const { address } = useAccount();
+
+  useEffect(() => {
+    const fetchEigenPod = async () => {
+      if (!publicClient || !walletClient?.account) {
+        return;
+      }
+
+      console.log("Fetching eigenpod");
+
+      const eigenPodAddress = await getEigenPod(
+        publicClient,
+        walletClient.account.address
+      );
+      if (eigenPodAddress !== zeroAddress && eigenPodAddress) {
+        dispatch(appActions.setEigenpodAddress(eigenPodAddress));
+        console.log(`Eigenpod found: ${eigenPodAddress}`);
+      }
+    };
+
+    if (!eigenpodAddress && publicClient && walletClient?.account.address) {
+      fetchEigenPod();
+    }
+  }, [address, publicClient, walletClient]);
+
+  const handleCreateEigenPod = async () => {
+    try {
+      setIsCreating(true);
+      console.log("Creating eigenpod");
+
+      if (!publicClient || !walletClient?.account) {
+        setIsCreating(false);
+        console.log("Public client or wallet client not found");
+        return;
+      }
+
+      const data = await deployEigenPod(publicClient, walletClient);
+
+      if (data && data.eigenPodAddress) {
+        dispatch(appActions.setEigenpodAddress(data.eigenPodAddress));
+        console.log(
+          `Eigenpod created: ${data.eigenPodAddress} with tx : ${data.txHash}`
+        );
+      } else {
+        console.log("Error creating eigenpod");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   return (
     <div className="w-full space-y-6">
@@ -54,10 +118,13 @@ export default function CreateEigenPodForm() {
               </div>
             ) : (
               <ButtonIcon
+                type="button"
                 variant={"secondary"}
+                onClick={() => handleCreateEigenPod()}
+                state={isCreating ? "loading" : "default"}
                 className="uppercase rounded-full w-fit px-8"
               >
-                Create Eigenpod
+                {eigenpodAddress ? "Creating" : "Create EigenPod"}
               </ButtonIcon>
             )
           }

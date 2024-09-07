@@ -1,3 +1,5 @@
+"use client";
+
 import {
   EIGENPOD_MANAGER_ABI,
   EIGNEPOD_MANAGER_ADDRESS,
@@ -16,6 +18,8 @@ export const deployEigenPod = async (
       functionName: "createPod",
     });
 
+    console.log("request", request);
+
     const hash = await walletClient.writeContract(request);
     console.log("hash", hash);
 
@@ -23,17 +27,42 @@ export const deployEigenPod = async (
       hash: hash,
     });
 
-    const podAddress = decodeFunctionResult({
-      abi: EIGENPOD_MANAGER_ABI,
-      functionName: "createPod",
-      data: result,
-    });
-
     return {
       txHash: hash,
       txReciept: txReciept,
-      eigenPodAddress: podAddress,
+      eigenPodAddress: result,
     };
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getEigenPod = async (
+  publicClient: PublicClient,
+  userAddress: `0x${string}`
+) => {
+  try {
+    const hasPod = await publicClient.readContract({
+      address: EIGNEPOD_MANAGER_ADDRESS,
+      abi: EIGENPOD_MANAGER_ABI,
+      functionName: "hasPod",
+      args: [userAddress],
+    });
+
+    console.log("hasPod", hasPod);
+
+    if (!hasPod) {
+      return null;
+    }
+
+    const podAddress = await publicClient.readContract({
+      address: EIGNEPOD_MANAGER_ADDRESS,
+      abi: EIGENPOD_MANAGER_ABI,
+      functionName: "getPod",
+      args: [userAddress],
+    });
+
+    return podAddress;
   } catch (error) {
     console.error(error);
   }
