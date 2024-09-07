@@ -14,6 +14,10 @@ import keystore from "./test.keystore.json";
 import { privateKeyToAccount } from "viem/accounts";
 import { holesky } from "viem/chains";
 import axios from "axios";
+import {
+  SSV_NETWORK_VIEWS_ABI,
+  SSV_NETWORK_VIEWS_ADDRESS,
+} from "@/constants/SSVNetworkViews";
 
 // 1. Fetch all the available operators to be shown for creating the cluster
 export const getSSVOperators = async ({ pageParam }: { pageParam: number }) => {
@@ -106,7 +110,8 @@ export const distributeKeys = async ({
 export const registerValidator = async (
   publicClient: PublicClient,
   walletClient: WalletClient,
-  payload: any
+  payload: any,
+  fees: number
 ) => {
   try {
     const { request } = await publicClient.simulateContract({
@@ -118,7 +123,7 @@ export const registerValidator = async (
         payload.publicKey,
         payload.operatorIds,
         payload.sharesData,
-        parseEther("1.5"),
+        parseEther(fees.toString()),
         {
           validatorCount: 0,
           networkFeeIndex: BigInt(0),
@@ -206,6 +211,20 @@ export const approveSSVToken = async (
 };
 
 // 4. Fetch SSV token Fees amount
+
+export const getSSVTokenFees = async (periodInMonth: number) => {
+  try {
+    const networkFeeBase = 1 / 12; // for a month in SSV
+    const minLiquidationCollateral = 1; // in SSV
+
+    const networkFee = networkFeeBase * periodInMonth;
+    const totalFee = networkFee + minLiquidationCollateral;
+
+    return totalFee;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // const main = async () => {
 //   const account = privateKeyToAccount(`0x${process.env.PRIVATE_KEY}`);
