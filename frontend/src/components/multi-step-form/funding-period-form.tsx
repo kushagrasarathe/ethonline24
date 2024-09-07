@@ -3,14 +3,16 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppStore } from "@/redux/hooks";
 import { appActions } from "@/redux/slices/app-slice";
 import { ButtonIcon } from "../ui/button-icon";
 import { Dot } from "lucide-react";
 import { set } from "react-hook-form";
+import { formatUnits } from "viem";
 
 export default function FundingPeriodForm() {
   const dispatch = useAppDispatch();
+  const { selectedOperators, eigenpodAddress } = useAppStore();
   const [isFundingInfoSaved, setIsFundingInfoSaved] = React.useState(false);
   const [selectedDuration, setSelectedDuration] = React.useState<
     "six-months" | "one-year"
@@ -47,30 +49,47 @@ export default function FundingPeriodForm() {
       <Card className="rounded-xl">
         {isFundingInfoSaved ? (
           <div className="space-y-5 p-6">
-            <div className="border-b pb-4 space-y-2">
-              <div className="mb-4 flex flex-col items-center justify-center gap-2">
-                <svg
-                  className="checkmark pt-0"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 52 52"
-                >
-                  <circle
-                    className="checkmark__circle"
-                    cx="26"
-                    cy="26"
-                    r="25"
-                    fill="none"
-                  />{" "}
-                  <path
-                    className="checkmark__check"
-                    fill="none"
-                    d="M14.1 27.2l7.1 7.2 16.7-16.8"
-                  />
-                </svg>
-                <div className="text-gray-500 font-semibold">
-                  Validator funding period data saved
+            {eigenpodAddress && (
+              <div className="pb-4 border-b space-y-2">
+                <div className="text-sm font-semibold text-gray-500">
+                  Validator Public Key
+                </div>
+                <div className="bg-primary text-secondary p-3 rounded-lg font-semibold">
+                  {eigenpodAddress}
                 </div>
               </div>
+            )}
+            <div className="mb-6 space-y-1">
+              {selectedOperators?.map((operator) => (
+                <div
+                  key={operator.public_key}
+                  className="flex items-center justify-between px-2"
+                >
+                  <div className="flex items-center justify-normal gap-2 w-3/12">
+                    {operator?.logo ? (
+                      <img
+                        src={operator?.logo as string}
+                        alt={operator?.name as string}
+                        className="size-8 rounded-full bg-white p-0.5 object-cover"
+                      />
+                    ) : (
+                      <div className="size-10 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-500" />
+                    )}
+                    <div>
+                      <div className="text-base font-semibold">
+                        {operator.name}
+                      </div>
+                      <div className="">Id: {operator.id}</div>
+                    </div>
+                  </div>
+
+                  <div className="ml-auto">
+                    {formatUnits(BigInt(operator?.fee || 0), 9)}
+                  </div>
+                </div>
+              ))}{" "}
+            </div>
+            <div className="border-y py-4 space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <div>Funding Summary</div>
                 <div>Sub Total</div>
@@ -174,7 +193,7 @@ export default function FundingPeriodForm() {
           </CardContent>
         )}
       </Card>
-      {!isFundingInfoSaved && (
+      {!isFundingInfoSaved ? (
         <ButtonIcon
           onClick={handleValidatorFundingPeriodData}
           type="button"
@@ -182,6 +201,16 @@ export default function FundingPeriodForm() {
         >
           Save
         </ButtonIcon>
+      ) : (
+        <div className="flex items-center gap-2 justify-between">
+          <ButtonIcon variant={"outline"} type="button" className="w-full">
+            Approve
+          </ButtonIcon>
+
+          <ButtonIcon type="button" className="w-full">
+            Register Validator
+          </ButtonIcon>
+        </div>
       )}
     </div>
   );

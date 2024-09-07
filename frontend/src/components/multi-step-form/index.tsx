@@ -13,6 +13,7 @@ import CreateEigenPodForm from "./eigen-pod-form";
 import CreateSsvOperatorsCluster from "../create-ssv-operators-cluster";
 import GenerateKeysFrom from "./generate-keys-from";
 import FundingPeriodForm from "./funding-period-form";
+import DepositEthForm from "./deposit-eth-form";
 
 function getStepContent(step: number) {
   switch (step) {
@@ -25,7 +26,7 @@ function getStepContent(step: number) {
     case 4:
       return <FundingPeriodForm />;
     case 5:
-      return <div>form5</div>;
+      return <DepositEthForm />;
     default:
       return "Unknown step";
   }
