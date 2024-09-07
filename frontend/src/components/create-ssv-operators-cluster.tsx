@@ -12,6 +12,7 @@ import { SSVOperator } from "@/types/server";
 import { Button } from "./ui/button";
 import { ButtonIcon } from "./ui/button-icon";
 import { formatUnits } from "viem";
+import { calculateOperatorFees } from "@/utils/ssvFees";
 
 const clusterSet = ["4", "7", "10", "13"].map(Number);
 
@@ -157,7 +158,7 @@ export default function CreateSsvOperatorsCluster() {
                     {operator.performance?.["30d"]?.toFixed(2)} %
                   </div>
                   <div className="w-2/12">
-                    {formatUnits(BigInt(operator?.fee || 0), 9)}
+                    {calculateOperatorFees(operator?.fee || "0")}
                   </div>
                 </div>
               ))}{" "}

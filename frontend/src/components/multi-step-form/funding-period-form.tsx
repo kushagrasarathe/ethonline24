@@ -8,11 +8,13 @@ import { appActions } from "@/redux/slices/app-slice";
 import { ButtonIcon } from "../ui/button-icon";
 import { Dot } from "lucide-react";
 import { set } from "react-hook-form";
-import { formatUnits } from "viem";
+import { calculateOperatorFees } from "@/utils/ssvFees";
 
 export default function FundingPeriodForm() {
   const dispatch = useAppDispatch();
-  const { selectedOperators, eigenpodAddress } = useAppStore();
+  const { selectedOperators, validatiorFundingPeriod, eigenpodAddress } =
+    useAppStore();
+
   const [isFundingInfoSaved, setIsFundingInfoSaved] = React.useState(false);
   const [selectedDuration, setSelectedDuration] = React.useState<
     "six-months" | "one-year"
@@ -24,10 +26,16 @@ export default function FundingPeriodForm() {
 
   const handleValidatorFundingPeriodData = () => {
     setIsFundingInfoSaved(true);
+    let operatorFee = 0;
+
+    for (const operator of selectedOperators) {
+      operatorFee += Number(calculateOperatorFees(operator.fee || "0"));
+    }
+
     dispatch(
       appActions.setValidatorFundingPeriod({
         duration: selectedDuration,
-        operatorFee: 0,
+        operatorFee: operatorFee,
         networkFee: 0,
         liquidationCollateral: 0,
         totalFunding: 0,
@@ -84,7 +92,7 @@ export default function FundingPeriodForm() {
                   </div>
 
                   <div className="ml-auto">
-                    {formatUnits(BigInt(operator?.fee || 0), 9)}
+                    {calculateOperatorFees(operator?.fee || "0")}
                   </div>
                 </div>
               ))}{" "}

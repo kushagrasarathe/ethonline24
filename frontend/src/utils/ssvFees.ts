@@ -7,6 +7,7 @@ import {
   createWalletClient,
   formatUnits,
   http,
+  parseUnits,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { holesky } from "viem/chains";
@@ -64,4 +65,12 @@ export const getSSVFees = async () => {
   }
 };
 
-getSSVFees();
+export const calculateOperatorFees = (operatorFee: string) => {
+  try {
+    const Calculated = Number(operatorFee) * 5 * 60 * 24 * 365;
+    const formattedFee = formatUnits(BigInt(Calculated), 18);
+    return Number(formattedFee).toFixed(1);
+  } catch (error) {
+    console.error(error);
+  }
+};
