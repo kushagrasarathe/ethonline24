@@ -4,9 +4,33 @@ import { Card, CardContent } from "../ui/card";
 import { useAppStore } from "@/redux/hooks";
 import Link from "next/link";
 import { ButtonIcon } from "../ui/button-icon";
+import { depositETH } from "@/utils/ethDeposit";
+import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
 export default function DepositEthForm() {
-  const { selectedOperators } = useAppStore();
+  const { selectedOperators, depositDataFile } = useAppStore();
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+  const { address } = useAccount();
+
+  const handleDepositETH = async () => {
+    try {
+      if (!depositDataFile) {
+        throw new Error("Deposit data file not found");
+      }
+
+      const depositData = JSON.parse(depositDataFile.toString());
+      console.log("Deposit data: ", depositData);
+
+      if (!publicClient || !walletClient?.account) {
+        return;
+      }
+      const tx = await depositETH(publicClient, walletClient, depositData);
+      console.log(`Deposit transaction hash: ${tx?.txHash}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="w-full space-y-5 md:max-w-xl">
       <div className="space-y-4 text-center">
