@@ -176,22 +176,23 @@ export const getNextSSVNonce = async (
 // 3. Approve SSV Token for fees
 export const approveSSVToken = async (
   publicClient: PublicClient,
-  walletClient: WalletClient
+  walletClient: WalletClient,
+  fees: number
 ) => {
   try {
-    const data = await publicClient.readContract({
-      address: SSV_TOKEN_ADDRESS,
-      abi: SSV_TOKEN_ABI,
-      functionName: "balanceOf",
-      args: [walletClient.account?.address!],
-    });
+    // const data = await publicClient.readContract({
+    //   address: SSV_TOKEN_ADDRESS,
+    //   abi: SSV_TOKEN_ABI,
+    //   functionName: "balanceOf",
+    //   args: [walletClient.account?.address!],
+    // });
 
     const { request, result } = await publicClient.simulateContract({
       account: walletClient.account,
       address: SSV_TOKEN_ADDRESS,
       abi: SSV_TOKEN_ABI,
       functionName: "approve",
-      args: [SSV_NETWORK_ADDRESS, data],
+      args: [SSV_NETWORK_ADDRESS, parseEther(fees.toString())],
     });
 
     const hash = await walletClient.writeContract(request);
@@ -212,19 +213,19 @@ export const approveSSVToken = async (
 
 // 4. Fetch SSV token Fees amount
 
-export const getSSVTokenFees = async (periodInMonth: number) => {
-  try {
-    const networkFeeBase = 1 / 12; // for a month in SSV
-    const minLiquidationCollateral = 1; // in SSV
+// export const getSSVTokenFees = async (periodInMonth: number) => {
+//   try {
+//     const networkFeeBase = 1 / 12; // for a month in SSV
+//     const minLiquidationCollateral = 1; // in SSV
 
-    const networkFee = networkFeeBase * periodInMonth;
-    const totalFee = networkFee + minLiquidationCollateral;
+//     const networkFee = networkFeeBase * periodInMonth;
+//     const totalFee = networkFee + minLiquidationCollateral;
 
-    return totalFee;
-  } catch (error) {
-    console.error(error);
-  }
-};
+//     return totalFee;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 // const main = async () => {
 //   const account = privateKeyToAccount(`0x${process.env.PRIVATE_KEY}`);

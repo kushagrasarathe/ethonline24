@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -9,38 +9,146 @@ import { ButtonIcon } from "../ui/button-icon";
 import { Dot } from "lucide-react";
 import { set } from "react-hook-form";
 import { calculateOperatorFees } from "@/utils/ssvFees";
+import {
+  approveSSVToken,
+  distributeKeys,
+  registerValidator,
+} from "@/utils/ssvNetwork";
+import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
 export default function FundingPeriodForm() {
   const dispatch = useAppDispatch();
-  const { selectedOperators, validatiorFundingPeriod, eigenpodAddress } =
-    useAppStore();
+  const {
+    selectedOperators,
+    validatiorFundingPeriod,
+    eigenpodAddress,
+    keyStoreFile,
+    keyStorePassword,
+  } = useAppStore();
 
   const [isFundingInfoSaved, setIsFundingInfoSaved] = React.useState(false);
   const [selectedDuration, setSelectedDuration] = React.useState<
     "six-months" | "one-year"
   >("six-months");
 
+  const publicClient = usePublicClient();
+  const { data: walletClient } = useWalletClient();
+  const { address } = useAccount();
+
   const handleDurationChange = (value: "six-months" | "one-year") => {
     setSelectedDuration(value);
   };
 
-  const handleValidatorFundingPeriodData = () => {
-    setIsFundingInfoSaved(true);
+  const setCalculatedFees = () => {
     let operatorFee = 0;
 
     for (const operator of selectedOperators) {
       operatorFee += Number(calculateOperatorFees(operator.fee || "0"));
     }
 
+    let networkFee = 0;
+
+    if (selectedDuration === "six-months") {
+      networkFee = 0.5;
+    } else {
+      networkFee = 1;
+    }
+
+    const minLiquidationCollateral = 1;
+
+    const totalFees = operatorFee + networkFee + minLiquidationCollateral;
+
     dispatch(
       appActions.setValidatorFundingPeriod({
         duration: selectedDuration,
         operatorFee: operatorFee,
-        networkFee: 0,
-        liquidationCollateral: 0,
-        totalFunding: 0,
+        networkFee: networkFee,
+        liquidationCollateral: minLiquidationCollateral,
+        totalFunding: totalFees,
       })
     );
+  };
+
+  const handleValidatorFundingPeriodData = () => {
+    setIsFundingInfoSaved(true);
+    setCalculatedFees();
+  };
+
+  useEffect(() => {
+    if (!validatiorFundingPeriod) {
+      setCalculatedFees();
+    }
+  }, [validatiorFundingPeriod]);
+
+  const handleApproveToken = async () => {
+    try {
+      if (!publicClient || !walletClient?.account) {
+        return;
+      }
+
+      const amount = validatiorFundingPeriod?.totalFunding;
+      if (!amount) {
+        return;
+      }
+      const tx = await approveSSVToken(publicClient, walletClient, amount);
+      console.log(`Approved ${amount} SSV token with tx: ${tx}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleRegisterValidator = async () => {
+    try {
+      console.log(keyStoreFile?.toString());
+      console.log(keyStorePassword);
+
+      // get the selectedOperatorIds
+      const operatorIds = selectedOperators?.map((operator) => operator.id!);
+
+      // get the selectedOPeratorKeys
+      const operatorKeys = selectedOperators?.map(
+        (operator) => operator.public_key
+      );
+
+      // decode the keystore File => JSON string
+      if (!keyStoreFile) {
+        console.log("Keystore file not found");
+        return;
+      }
+      const keystoreData = keyStoreFile.toString();
+
+      // distribute the keys
+      if (!publicClient || !walletClient?.account) {
+        return;
+      }
+      console.log("Distributing keys");
+      const payload = await distributeKeys({
+        operatorKeys,
+        operatorIds,
+        keystoreFile: keystoreData,
+        keystorePassword: keyStorePassword,
+        publicClient,
+        walletClient,
+      });
+      console.log(payload);
+
+      const fees = validatiorFundingPeriod?.totalFunding;
+      if (!fees) {
+        console.log("Fees not found");
+        return;
+      }
+      console.log("Registering validator");
+      // registerValidator call
+      // const tx = await registerValidator(
+      //   publicClient,
+      //   walletClient,
+      //   payload,
+      //   fees
+      // );
+      // console.log(`Registered validator with tx: ${tx?.txHash}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -104,20 +212,40 @@ export default function FundingPeriodForm() {
               </div>
               <div className="flex items-center justify-between font-semibold">
                 <div>Operator Fee</div>
-                <div className="text-gray-500">0.0 SSV</div>
+                <div className="text-gray-500">
+                  {validatiorFundingPeriod
+                    ? validatiorFundingPeriod.operatorFee
+                    : "0.0"}
+                  SSV
+                </div>
               </div>
               <div className="flex items-center justify-between font-semibold">
                 <div>Network Fee</div>
-                <div className="text-gray-500">0.0 SSV</div>
+                <div className="text-gray-500">
+                  {validatiorFundingPeriod
+                    ? validatiorFundingPeriod.networkFee
+                    : "0.0"}{" "}
+                  SSV
+                </div>
               </div>
               <div className="flex items-center justify-between font-semibold">
                 <div>Liquidation collateral</div>
-                <div className="text-gray-500">0.0 SSV</div>
+                <div className="text-gray-500">
+                  {validatiorFundingPeriod
+                    ? validatiorFundingPeriod.liquidationCollateral
+                    : "0.0"}{" "}
+                  SSV
+                </div>
               </div>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm">Total</div>
-              <div className="font-semibold">2 SSV</div>
+              <div className="font-semibold">
+                {validatiorFundingPeriod
+                  ? validatiorFundingPeriod.totalFunding
+                  : "0.0"}{" "}
+                SSV
+              </div>
             </div>
           </div>
         ) : (
@@ -183,20 +311,40 @@ export default function FundingPeriodForm() {
               </div>
               <div className="flex items-center justify-between font-semibold">
                 <div>Operator Fee</div>
-                <div className="text-gray-500">0.0 SSV</div>
+                <div className="text-gray-500">
+                  {validatiorFundingPeriod
+                    ? validatiorFundingPeriod.operatorFee
+                    : "0.0"}
+                  SSV
+                </div>
               </div>
               <div className="flex items-center justify-between font-semibold">
                 <div>Network Fee</div>
-                <div className="text-gray-500">0.0 SSV</div>
+                <div className="text-gray-500">
+                  {validatiorFundingPeriod
+                    ? validatiorFundingPeriod.networkFee
+                    : "0.0"}{" "}
+                  SSV
+                </div>
               </div>
               <div className="flex items-center justify-between font-semibold">
                 <div>Liquidation collateral</div>
-                <div className="text-gray-500">0.0 SSV</div>
+                <div className="text-gray-500">
+                  {validatiorFundingPeriod
+                    ? validatiorFundingPeriod.liquidationCollateral
+                    : "0.0"}{" "}
+                  SSV
+                </div>
               </div>
             </div>
             <div className="flex items-center justify-between">
               <div className="text-sm">Total</div>
-              <div className="font-semibold">2 SSV</div>
+              <div className="font-semibold">
+                {validatiorFundingPeriod
+                  ? validatiorFundingPeriod.totalFunding
+                  : "0.0"}{" "}
+                SSV
+              </div>
             </div>
           </CardContent>
         )}
@@ -211,12 +359,21 @@ export default function FundingPeriodForm() {
         </ButtonIcon>
       ) : (
         <div className="flex items-center gap-2 justify-between">
-          <ButtonIcon variant={"outline"} type="button" className="w-full">
+          <ButtonIcon
+            variant={"outline"}
+            type="button"
+            className="w-4/5"
+            onClick={handleApproveToken}
+          >
             Approve
           </ButtonIcon>
 
-          <ButtonIcon type="button" className="w-full">
-            Register Validator
+          <ButtonIcon
+            type="button"
+            className="w-full"
+            onClick={handleRegisterValidator}
+          >
+            Distribute Keys & Register Validator
           </ButtonIcon>
         </div>
       )}
