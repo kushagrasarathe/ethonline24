@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { StepperFormKeysType, StepperFormValues } from "@/types/hook-stepper";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { STEPPER_FORM_KEYS } from "@/constants/hook-stepper-constants";
 import StepperIndicator from "../ui/stepper-indicator";
 import { TriangleAlert } from "lucide-react";
@@ -14,6 +14,8 @@ import CreateSsvOperatorsCluster from "../create-ssv-operators-cluster";
 import GenerateKeysFrom from "./generate-keys-from";
 import FundingPeriodForm from "./funding-period-form";
 import DepositEthForm from "./deposit-eth-form";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 function getStepContent(step: number) {
   switch (step) {
@@ -164,15 +166,17 @@ const MultiStepForm = () => {
           Back
         </Button>
         {activeStep === 5 ? (
-          <Button
-            className="w-full rounded-full shadow-none uppercase"
-            type="button"
-            variant={"default"}
+          <Link
+            href={""}
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "w-full rounded-full shadow-none uppercase"
+            )}
             onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
+            // disabled={isSubmitting}
           >
-            Submit
-          </Button>
+            Manage Cluster
+          </Link>
         ) : (
           <Button
             type="button"
