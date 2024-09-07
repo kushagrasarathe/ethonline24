@@ -8,6 +8,9 @@ const initialState: TAppState = {
   ssvOperatorsData: {},
   selectedOperators: [],
   selectedClusterSize: 4,
+  keyStorePassword: "",
+  keyStoreFile: null,
+  depositDataFile: null,
 };
 
 const appSlice = createSlice({
@@ -52,6 +55,18 @@ const appSlice = createSlice({
           action.payload
         );
       }
+    },
+
+    setKeyStorePassword: (state, action: PayloadAction<string>) => {
+      state.keyStorePassword = action.payload;
+    },
+
+    setKeyStoreFile: (state, action: PayloadAction<File>) => {
+      state.keyStoreFile = action.payload;
+    },
+
+    setDepositDataFile: (state, action: PayloadAction<File>) => {
+      state.depositDataFile = action.payload;
     },
   },
 });

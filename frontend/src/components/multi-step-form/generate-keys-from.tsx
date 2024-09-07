@@ -6,7 +6,8 @@ import { Dot, FileCog2, FileIcon, FileJson2 } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import Link from "next/link";
-import { useAppStore } from "@/redux/hooks";
+import { useAppDispatch, useAppStore } from "@/redux/hooks";
+import { appActions } from "@/redux/slices/app-slice";
 
 interface FileState {
   keystoreFile: File | null;
@@ -14,12 +15,13 @@ interface FileState {
 }
 
 export default function GenerateKeysFrom() {
-  const { eigenpodAddress } = useAppStore();
+  const dispatch = useAppDispatch();
+
+  const { eigenpodAddress, keyStorePassword } = useAppStore();
   const [files, setFiles] = useState<FileState>({
     keystoreFile: null,
     depositDataFile: null,
   });
-  const [filePassword, setFilePassword] = useState<string>("");
 
   const keystoreInputRef = useRef<HTMLInputElement>(null);
   const depositDataInputRef = useRef<HTMLInputElement>(null);
@@ -30,6 +32,13 @@ export default function GenerateKeysFrom() {
   ) => {
     const file = event.target.files?.[0] || null;
     setFiles((prevState) => ({ ...prevState, [fileType]: file }));
+
+    if (fileType == "keystoreFile" && file) {
+      dispatch(appActions.setKeyStoreFile(file));
+    }
+    if (fileType == "depositDataFile" && file) {
+      dispatch(appActions.setDepositDataFile(file));
+    }
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -169,8 +178,12 @@ export default function GenerateKeysFrom() {
           <Label className="space-y-2">
             <span className="block">Keystore Password</span>
             <Input
-              value={filePassword}
-              onChange={(e) => setFilePassword(e.target.value)}
+              value={keyStorePassword}
+              onChange={(e) => {
+                if (e.target.value) {
+                  dispatch(appActions.setKeyStorePassword(e.target.value));
+                }
+              }}
               disabled={!files.keystoreFile}
               type="password"
               placeholder="Enter your keystore file password"

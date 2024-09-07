@@ -7,4 +7,7 @@ export type TAppState = {
   };
   selectedOperators: SSVOperator[];
   selectedClusterSize: number;
+  keyStorePassword: string;
+  keyStoreFile: File | null;
+  depositDataFile: File | null;
 };

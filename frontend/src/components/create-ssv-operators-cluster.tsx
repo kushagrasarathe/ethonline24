@@ -175,6 +175,7 @@ export default function CreateSsvOperatorsCluster() {
 
       <div className="w-full flex justify-end">
         <Button
+          type="button"
           disabled={
             selectedClusterSize === 0 ||
             selectedClusterSize !== selectedOperators.length

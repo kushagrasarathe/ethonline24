@@ -37,7 +37,7 @@ export default function CreateEigenPodForm() {
       if (!publicClient || !walletClient?.account) {
         return;
       }
-
+      setIsCreating(true);
       console.log("Fetching eigenpod");
 
       const eigenPodAddress = await getEigenPod(
@@ -48,6 +48,8 @@ export default function CreateEigenPodForm() {
         dispatch(appActions.setEigenpodAddress(eigenPodAddress));
         console.log(`Eigenpod found: ${eigenPodAddress}`);
       }
+
+      setIsCreating(false);
     };
 
     if (!eigenpodAddress && publicClient && walletClient?.account.address) {
@@ -121,6 +123,7 @@ export default function CreateEigenPodForm() {
                 type="button"
                 variant={"secondary"}
                 onClick={() => handleCreateEigenPod()}
+                disabled={isCreating}
                 state={isCreating ? "loading" : "default"}
                 className="uppercase rounded-full w-fit px-8"
               >
