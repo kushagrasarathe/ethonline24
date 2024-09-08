@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ButtonIcon } from "../ui/button-icon";
 import { depositETH } from "@/utils/ethDeposit";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { ArrowUpRight } from "lucide-react";
 
 export default function DepositEthForm() {
   const { selectedOperators, depositDataFile } = useAppStore();
@@ -111,22 +112,86 @@ export default function DepositEthForm() {
           ))}
         </div>
         <br />
-        <div className="text-primary bg-white py-6 rounded-lg text-sm font-semibold max-w-xs space-y-3 mx-auto">
-          <div>Please deposit</div>
-          <div className="text-2xl font-bold">
-            32 <span className="text-base font-semibold">ETH</span>
-          </div>{" "}
-          <div>to to fund your validator</div>
-        </div>
-        <ButtonIcon
-          state={isDepositing ? "loading" : "default"}
-          disabled={isDepositing}
-          className="w-full max-w-xs mx-auto"
-          type="button"
-          onClick={handleDepositETH}
-        >
-          {isDepositing ? "Depositing..." : "Deposit"}
-        </ButtonIcon>
+
+        <br />
+        {pubKey ? (
+          <div className="flex flex-col items-center justify-center gap-4">
+            {eigenDashboardLink && (
+              <div className="flex flex-col items-center justify-center gap-2">
+                <p className="text-center max-w-md text-sm font-semibold text-gray-500">
+                  Now you can restake your ETH from Eigenlayer dashboard after
+                  24hrs your validator is active
+                </p>
+                <Link
+                  href={eigenDashboardLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary mx-auto"
+                >
+                  <ButtonIcon
+                    icon={ArrowUpRight}
+                    iconPosition="right"
+                    className="w-52"
+                  >
+                    Eigen Dashboard
+                  </ButtonIcon>
+                </Link>
+              </div>
+            )}
+            {beaconChainLink && (
+              <Link
+                href={beaconChainLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary"
+              >
+                <ButtonIcon
+                  icon={ArrowUpRight}
+                  iconPosition="right"
+                  className="w-52"
+                >
+                  Beacon Chain Explorer
+                </ButtonIcon>
+              </Link>
+            )}
+
+            {ssvNetworkLink && (
+              <Link
+                href={ssvNetworkLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary"
+              >
+                <ButtonIcon
+                  icon={ArrowUpRight}
+                  iconPosition="right"
+                  className="w-52"
+                >
+                  SSV Network Explorer
+                </ButtonIcon>
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="text-primary bg-white py-6 rounded-lg text-sm font-semibold max-w-xs space-y-3 mx-auto">
+              <div>Please deposit</div>
+              <div className="text-2xl font-bold">
+                32 <span className="text-base font-semibold">ETH</span>
+              </div>{" "}
+              <div>to to fund your validator</div>
+            </div>
+            <ButtonIcon
+              state={isDepositing ? "loading" : "default"}
+              disabled={isDepositing}
+              className="w-full max-w-xs mx-auto"
+              type="button"
+              onClick={handleDepositETH}
+            >
+              {isDepositing ? "Depositing..." : "Deposit"}
+            </ButtonIcon>
+          </div>
+        )}
       </div>
     </div>
   );

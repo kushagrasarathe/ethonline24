@@ -86,7 +86,7 @@ export default function Home() {
           className=""
         /> */}
 
-        <Carousel className="w-full ">
+        {/* <Carousel className="w-full ">
           <CarouselContent className="max-w-2xl">
             {steps.map((step, idx) => (
               <CarouselItem className="w-full shadow-xl">
@@ -121,7 +121,17 @@ export default function Home() {
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
-        </Carousel>
+        </Carousel> */}
+
+        <div className="drop-shadow-2xl w-full p-2 rounded-xl mx-auto bg-white">
+          <Image
+            src={"/app-flow.jpeg"}
+            width={1000}
+            height={1000}
+            alt="flow"
+            className="w-full"
+          />
+        </div>
 
         <div className="space-y-3">
           <div className="text-gray-500 font-semibold text-sm">Powered by</div>

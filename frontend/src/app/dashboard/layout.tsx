@@ -7,7 +7,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="md:max-w-7xl mx-auto">
+    <div className="md:max-w-7xl mx-auto ">
       <div>{children}</div>
       <Toaster />
     </div>
