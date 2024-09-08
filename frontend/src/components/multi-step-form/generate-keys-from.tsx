@@ -131,7 +131,7 @@ export default function GenerateKeysFrom() {
                 3. Use the following command to generate validator keys and
                 deposit data
               </div>
-              <div>If you don't have a mnemonic : </div>
+              <div>If you don&apos;t have a mnemonic : </div>
               <div className="text-indigo-200 font-normal mt-0.5 block bg-gray-800 px-3 py-2 rounded-md text-[13px] w-fit">
                 {`./deposit new-mnemonic --num_validators 1 --chain holesky
                 --eth1_withdrawal_address ${
@@ -162,7 +162,8 @@ export default function GenerateKeysFrom() {
             </div>
             <div className="space-y-1">
               4. After generating the keys, upload the keystore file and deposit
-              data file below which you can find in the folder "validator_keys".
+              data file below which you can find in the folder
+              &quot;validator_keys&quot;.
             </div>
           </div>
         </div>

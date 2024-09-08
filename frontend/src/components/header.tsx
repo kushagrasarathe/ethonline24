@@ -9,7 +9,7 @@ import ConnectWalletButton from "./wallet-connect";
 
 export default function Header() {
   const path = usePathname();
-  const isDashboard = path === "/dashboard";
+  const isApp = path === "/app";
   return (
     <div className="flex w-full items-center justify-between py-5 md:max-w-7xl mx-auto z-[10000]">
       <Link href={"/"}>
@@ -22,16 +22,16 @@ export default function Header() {
           priority
         />
       </Link>
-      {isDashboard ? (
+      {isApp ? (
         <div>
           <ConnectWalletButton />
         </div>
       ) : (
         <Link
-          href={"/dashboard"}
+          href={"/app"}
           className={cn(buttonVariants({ variant: "default" }))}
         >
-          Dashboard
+          Launch App
         </Link>
       )}
     </div>

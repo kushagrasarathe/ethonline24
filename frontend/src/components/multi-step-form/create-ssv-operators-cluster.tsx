@@ -4,16 +4,16 @@ import { useAppSelector, useAppDispatch, useAppStore } from "@/redux/hooks";
 import { useFetchSsvOperators } from "@/hooks/api/useFetchSsvOperators";
 import { useInView } from "react-intersection-observer";
 import { Loader2, XIcon } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { appActions } from "@/redux/slices/app-slice";
 import { SSVOperator } from "@/types/server";
-import { Button } from "./ui/button";
-import { ButtonIcon } from "./ui/button-icon";
+import { Button } from "../ui/button";
+import { ButtonIcon } from "../ui/button-icon";
 import { formatUnits } from "viem";
 import { calculateOperatorFees } from "@/utils/ssvFees";
-import { Badge } from "./ui/badge";
+import { Badge } from "../ui/badge";
 
 const clusterSet = ["4", "7", "10", "13"].map(Number);
 
@@ -69,7 +69,7 @@ export default function CreateSsvOperatorsCluster() {
           </div>
           <div className="text-gray-500 text-sm font-semibold max-w-3xl w-full">
             A Cluster of operators will be running ETH Execution & consensus
-            client on your behalf via the SSV Network, so you don't need to
+            client on your behalf via the SSV Network, so you don&apos;t need to
             worry about the hassle of running an Ethereum validator
           </div>
         </div>

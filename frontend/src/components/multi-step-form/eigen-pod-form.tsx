@@ -6,7 +6,7 @@ import { ButtonIcon } from "../ui/button-icon";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import Link from "next/link";
 import { ArrowDown, CopyIcon } from "lucide-react";
-import CreateSsvOperatorsCluster from "../create-ssv-operators-cluster";
+import CreateSsvOperatorsCluster from "./create-ssv-operators-cluster";
 import { toast } from "@/hooks/use-toast";
 import { useAppDispatch, useAppStore } from "@/redux/hooks";
 import { appActions } from "@/redux/slices/app-slice";

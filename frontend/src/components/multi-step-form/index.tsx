@@ -10,7 +10,7 @@ import StepperIndicator from "../ui/stepper-indicator";
 import { TriangleAlert } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import CreateEigenPodForm from "./eigen-pod-form";
-import CreateSsvOperatorsCluster from "../create-ssv-operators-cluster";
+import CreateSsvOperatorsCluster from "./create-ssv-operators-cluster";
 import GenerateKeysFrom from "./generate-keys-from";
 import FundingPeriodForm from "./funding-period-form";
 import DepositEthForm from "./deposit-eth-form";
