@@ -95,7 +95,10 @@ export default function GenerateKeysFrom() {
     <div className="space-y-10 w-full">
       <FormCard
         title="Generate Validator Keystore"
-        description="Follow below steps to generate your validator keystore"
+        description="
+        To run a validator, you need to generate a new set of validator keys and other data to process the ETH staking.
+        
+        Follow below steps to generate your validator keystore"
       >
         <div className="rounded-xl bg-white py-4">
           <div className="flex items-center gap-3 border-b border-gray-300 pb-4 px-4">

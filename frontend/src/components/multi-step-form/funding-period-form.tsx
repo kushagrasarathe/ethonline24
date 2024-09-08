@@ -15,6 +15,7 @@ import {
   registerValidator,
 } from "@/utils/ssvNetwork";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import Link from "next/link";
 
 export default function FundingPeriodForm() {
   const dispatch = useAppDispatch();
@@ -26,6 +27,8 @@ export default function FundingPeriodForm() {
     keyStorePassword,
   } = useAppStore();
 
+  const [isApproving, setIsApproving] = React.useState(false);
+  const [isDistributing, setIsDistributing] = React.useState(false);
   const [isFundingInfoSaved, setIsFundingInfoSaved] = React.useState(false);
   const [selectedDuration, setSelectedDuration] = React.useState<
     "six-months" | "one-year"
@@ -81,6 +84,7 @@ export default function FundingPeriodForm() {
   }, [validatiorFundingPeriod]);
 
   const handleApproveToken = async () => {
+    setIsApproving(true);
     try {
       if (!publicClient || !walletClient?.account) {
         return;
@@ -92,12 +96,15 @@ export default function FundingPeriodForm() {
       }
       const tx = await approveSSVToken(publicClient, walletClient, amount);
       console.log(`Approved ${amount} SSV token with tx: ${tx}`);
+      setIsApproving(false);
     } catch (error) {
       console.log(error);
+      setIsApproving(false);
     }
   };
 
   const handleRegisterValidator = async () => {
+    setIsDistributing(true);
     try {
       // get the selectedOperatorIds
       const operatorIds = selectedOperators?.map((operator) => operator.id!);
@@ -148,8 +155,10 @@ export default function FundingPeriodForm() {
         fees
       );
       console.log(`Registered validator with tx: ${tx?.txHash}`);
+      setIsDistributing(false);
     } catch (error) {
       console.log(error);
+      setIsDistributing(false);
     }
   };
 
@@ -159,7 +168,12 @@ export default function FundingPeriodForm() {
         <div className="text-2xl font-bold text-primary">
           Select your validator funding period
         </div>
-        <p className="text-gray-400 text-sm font-semibold">
+        <p className="text-gray-500 text-sm font-semibold">
+          To run a Distributed Validator you must split your validation key into
+          Key Shares and distribute them across your selected operators to
+          operate in your behalf to improve your validator resilience, safety,
+          liveliness, and diversity.
+          <br /> <br />
           The SSV amount you deposit will determine your validator operational
           runway
         </p>
@@ -351,6 +365,18 @@ export default function FundingPeriodForm() {
           </CardContent>
         )}
       </Card>
+      <div className="text-sm text-center max-w-lg mx-auto font-semibold text-indigo-600 font-mono">
+        Please note that you need SSV tokens to fund your validator. You can get
+        some from the{" "}
+        <Link
+          target="_blank"
+          rel="noreferrer noopener"
+          href={"https://faucet.ssv.network/"}
+          className="underline"
+        >
+          SSV Network faucet.
+        </Link>
+      </div>
       {!isFundingInfoSaved ? (
         <ButtonIcon
           onClick={handleValidatorFundingPeriodData}
@@ -362,20 +388,26 @@ export default function FundingPeriodForm() {
       ) : (
         <div className="flex items-center gap-2 justify-between">
           <ButtonIcon
+            state={isApproving ? "loading" : "default"}
             variant={"outline"}
+            disabled={isApproving}
             type="button"
             className="w-4/5"
             onClick={handleApproveToken}
           >
-            Approve
+            {isApproving ? "Approving..." : "Approve"}
           </ButtonIcon>
 
           <ButtonIcon
+            state={isDistributing ? "loading" : "default"}
+            disabled={isDistributing}
             type="button"
             className="w-full"
             onClick={handleRegisterValidator}
           >
-            Distribute Keys & Register Validator
+            {isDistributing
+              ? "Distributing..."
+              : "Distribute Keys & Register Validator"}
           </ButtonIcon>
         </div>
       )}

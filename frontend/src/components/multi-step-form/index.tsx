@@ -16,6 +16,7 @@ import FundingPeriodForm from "./funding-period-form";
 import DepositEthForm from "./deposit-eth-form";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useAppStore } from "@/redux/hooks";
 
 function getStepContent(step: number) {
   switch (step) {
@@ -35,6 +36,13 @@ function getStepContent(step: number) {
 }
 
 const MultiStepForm = () => {
+  const {
+    eigenpodAddress,
+    keyStoreFile,
+    depositDataFile,
+    keyStorePassword,
+    selectedOperators,
+  } = useAppStore();
   const [activeStep, setActiveStep] = useState(1);
   const [erroredInputName, setErroredInputName] = useState("");
   const methods = useForm<StepperFormValues>({
@@ -135,6 +143,14 @@ const MultiStepForm = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const disableNextStep =
+    (activeStep === 1 && !eigenpodAddress) ||
+    (activeStep === 2 &&
+      !keyStoreFile &&
+      !depositDataFile &&
+      !keyStorePassword) ||
+    (activeStep === 3 && !selectedOperators.length);
+
   return (
     <div className="h-full space-y-10">
       <div className="bg-primary text-secondary py-3 shadow-[inset_0px_0px_10px_0px_#00000024] rounded-full">
@@ -183,6 +199,7 @@ const MultiStepForm = () => {
             variant={"default"}
             className="w-full rounded-full shadow-none uppercase"
             onClick={handleNext}
+            disabled={disableNextStep}
           >
             Next
           </Button>

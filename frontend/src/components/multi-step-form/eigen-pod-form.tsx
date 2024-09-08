@@ -87,14 +87,11 @@ export default function CreateEigenPodForm() {
 
   return (
     <div className="w-full space-y-6">
-      <div className="text-2xl font-bold">Native Eth Staking</div>
+      {/* <div className="text-2xl font-bold">Native Eth Staking</div> */}
       <div className="flex flex-col items-stretch justify-between gap-6">
         <FormCard
           title="Create Eigenpod"
-          description="In order to restake your beacon chain validators, you must first
-              create an EigenPod. An EigenPod is a smart contract managed by
-              you, which allows the EigenLayer protocol to monitor and manage
-              balance and withdrawal statuses."
+          description="In order to restake your beacon chain validators, you must first create an EigenPod as it will be the withdrawl address of the validator you run. An EigenPod is a smart contract managed by you, which allows the EigenLayer protocol to monitor and manage balance and withdrawal statuses."
           cta={
             eigenpodAddress ? (
               <div className="space-y-2">

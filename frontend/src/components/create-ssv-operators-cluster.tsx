@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import { ButtonIcon } from "./ui/button-icon";
 import { formatUnits } from "viem";
 import { calculateOperatorFees } from "@/utils/ssvFees";
+import { Badge } from "./ui/badge";
 
 const clusterSet = ["4", "7", "10", "13"].map(Number);
 
@@ -62,16 +63,24 @@ export default function CreateSsvOperatorsCluster() {
   return (
     <div className="space-y-4 w-full">
       <div className="px-0 flex flex-row items-center justify-between">
-        <div className="text-primary text-2xl font-bold w-full">
-          Create operator cluster
+        <div className="space-y-2">
+          <div className="text-primary text-2xl font-bold w-full">
+            Create operator cluster
+          </div>
+          <div className="text-gray-500 text-sm font-semibold max-w-3xl w-full">
+            A Cluster of operators will be running ETH Execution & consensus
+            client on your behalf via the SSV Network, so you don't need to
+            worry about the hassle of running an Ethereum validator
+          </div>
         </div>
+
         {selectedClusterSize > 0 && (
           <ButtonIcon
             size={"sm"}
             iconPosition="right"
             onClick={() => {
               handleClusterSizeChange(0);
-              appActions.resetOperators();
+              dispatch(appActions.resetOperators());
             }}
             icon={XIcon}
           >
@@ -111,7 +120,7 @@ export default function CreateSsvOperatorsCluster() {
 
       <Card className="bg-transparent shadow-none border-0 rounded-2xl max-h-[500px] py-6 overflow-y-auto bg-white">
         <CardContent className="flex flex-col justify-center relative pt-0">
-          <div className="flex items-center justify-between gap-3 font-semibold text-gray-500 border-b  py-3 sticky -top-6 bg-white">
+          <div className="flex items-center justify-between gap-3 font-semibold text-gray-500 border-b  py-3 sticky -top-6 bg-white z-40">
             <div className="w-2/12">Select</div>
             <div className="w-3/12">Operator</div>
             <div className="w-2/12">Validators</div>
@@ -124,15 +133,22 @@ export default function CreateSsvOperatorsCluster() {
               {ssvOperatorsData?.[+page]?.operators?.map((operator) => (
                 <div
                   key={operator.public_key}
-                  className="flex items-center justify-between hover:bg-gray-50/90 p-3"
+                  className={cn(
+                    "flex items-center justify-between hover:bg-gray-50/90 p-3",
+                    ((operator?.validators_count as number) > 500 ||
+                      !!operator.is_private) &&
+                      "bg-gray-50 hover:cursor-not-allowed"
+                  )}
                 >
                   <div className="w-2/12">
                     <Checkbox
                       checked={isOperatorSelected(operator.public_key)}
                       onCheckedChange={() => handleOperatorSelect(operator)}
                       disabled={
-                        selectedOperators.length >= selectedClusterSize &&
-                        !isOperatorSelected(operator.public_key)
+                        (selectedOperators.length === selectedClusterSize &&
+                          !isOperatorSelected(operator.public_key)) ||
+                        (operator?.validators_count as number) > 500 ||
+                        !!operator.is_private
                       }
                     />
                   </div>
@@ -154,8 +170,11 @@ export default function CreateSsvOperatorsCluster() {
                     </div>
                   </div>
                   <div className="w-2/12">{operator.validators_count}</div>
-                  <div className="w-2/12">
-                    {operator.performance?.["30d"]?.toFixed(2)} %
+                  <div className="w-2/12 space-y-1">
+                    <div>{operator.performance?.["30d"]?.toFixed(2)} %</div>
+                    {operator.performance?.["30d"] === 0 && (
+                      <Badge variant={"destructive"}>In-active</Badge>
+                    )}
                   </div>
                   <div className="w-2/12">
                     {calculateOperatorFees(operator?.fee || "0")}
@@ -166,7 +185,7 @@ export default function CreateSsvOperatorsCluster() {
           ))}
 
           {isFetchingNextPage && (
-            <div className="mx-auto flex gap-2 items-center">
+            <div className="mx-auto flex gap-2 items-center pt-4">
               <Loader2 className="size-5 animate-spin" /> <div>Loading...</div>
             </div>
           )}
@@ -174,17 +193,13 @@ export default function CreateSsvOperatorsCluster() {
         </CardContent>
       </Card>
 
-      <div className="w-full flex justify-end">
-        <Button
-          type="button"
-          disabled={
-            selectedClusterSize === 0 ||
-            selectedClusterSize !== selectedOperators.length
-          }
-          className="uppercase w-full"
-        >
-          Save Cluster
-        </Button>
+      <div className="w-full flex justify-center">
+        {!!selectedOperators.length &&
+          selectedClusterSize === selectedOperators.length && (
+            <div className="text-center font-semibold ">
+              Selected operators saved, you can now head over to next step now
+            </div>
+          )}
       </div>
     </div>
   );

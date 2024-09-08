@@ -9,11 +9,13 @@ import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 
 export default function DepositEthForm() {
   const { selectedOperators, depositDataFile } = useAppStore();
+  const [isDepositing, setIsDepositing] = React.useState(false);
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const { address } = useAccount();
 
   const handleDepositETH = async () => {
+    setIsDepositing(true);
     try {
       if (!depositDataFile) {
         throw new Error("Deposit data file not found");
@@ -29,8 +31,10 @@ export default function DepositEthForm() {
       const depositDataFor1 = depositData[0];
       const tx = await depositETH(publicClient, walletClient, depositDataFor1);
       console.log(`Deposit transaction hash: ${tx?.txHash}`);
+      setIsDepositing(false);
     } catch (error) {
       console.error(error);
+      setIsDepositing(false);
     }
   };
 
@@ -59,6 +63,12 @@ export default function DepositEthForm() {
           />
         </svg> */}
         <p className="text-gray-600 text-sm font-semibold">
+          Final step is to stake your ETH to Beacon chain to activate your
+          validator. It generally takes up to 24 hours for the deposit to be
+          processed by the beacon chain, post which the validator will be
+          active.
+          <br />
+          <br />
           Your new validator is managed by the following cluster. Your cluster
           operators have been notified and will start your validator operations
           shortly.
@@ -92,11 +102,13 @@ export default function DepositEthForm() {
           <div>to to fund your validator</div>
         </div>
         <ButtonIcon
+          state={isDepositing ? "loading" : "default"}
+          disabled={isDepositing}
           className="w-full max-w-xs mx-auto"
           type="button"
           onClick={handleDepositETH}
         >
-          Deposit
+          {isDepositing ? "Depositing..." : "Deposit"}
         </ButtonIcon>
       </div>
     </div>
