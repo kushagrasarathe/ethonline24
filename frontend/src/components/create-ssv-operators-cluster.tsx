@@ -135,7 +135,7 @@ export default function CreateSsvOperatorsCluster() {
                   key={operator.public_key}
                   className={cn(
                     "flex items-center justify-between hover:bg-gray-50/90 p-3",
-                    ((operator?.validators_count as number) > 500 ||
+                    ((operator?.validators_count as number) > 590 ||
                       !!operator.is_private) &&
                       "bg-gray-50 hover:cursor-not-allowed"
                   )}
@@ -147,7 +147,7 @@ export default function CreateSsvOperatorsCluster() {
                       disabled={
                         (selectedOperators.length === selectedClusterSize &&
                           !isOperatorSelected(operator.public_key)) ||
-                        (operator?.validators_count as number) > 500 ||
+                        (operator?.validators_count as number) > 590 ||
                         !!operator.is_private
                       }
                     />

@@ -27,6 +27,8 @@ export default function FundingPeriodForm() {
     keyStorePassword,
   } = useAppStore();
 
+  const [approveTx, setApproveTx] = React.useState<string>();
+  const [registerTx, setRegisterTx] = React.useState<string>();
   const [isApproving, setIsApproving] = React.useState(false);
   const [isDistributing, setIsDistributing] = React.useState(false);
   const [isFundingInfoSaved, setIsFundingInfoSaved] = React.useState(false);
@@ -94,8 +96,13 @@ export default function FundingPeriodForm() {
       if (!amount) {
         return;
       }
-      const tx = await approveSSVToken(publicClient, walletClient, amount);
-      console.log(`Approved ${amount} SSV token with tx: ${tx}`);
+      const approveTx = await approveSSVToken(
+        publicClient,
+        walletClient,
+        amount
+      );
+      console.log(`Approved ${amount} SSV token with tx: ${approveTx?.txHash}`);
+      setApproveTx(approveTx?.txHash);
       setIsApproving(false);
     } catch (error) {
       console.log(error);
@@ -148,13 +155,14 @@ export default function FundingPeriodForm() {
       console.log("Registering validator");
 
       // registerValidator call
-      const tx = await registerValidator(
+      const registerTx = await registerValidator(
         publicClient,
         walletClient,
         payload,
         fees
       );
-      console.log(`Registered validator with tx: ${tx?.txHash}`);
+      console.log(`Registered validator with tx: ${registerTx?.txHash}`);
+      setRegisterTx(registerTx?.txHash);
       setIsDistributing(false);
     } catch (error) {
       console.log(error);
@@ -166,7 +174,7 @@ export default function FundingPeriodForm() {
     <div className="w-full md:max-w-xl space-y-4">
       <div className="space-y-2">
         <div className="text-2xl font-bold text-primary">
-          Select your validator funding period
+          Distribute & Register Validator Keyshares
         </div>
         <p className="text-gray-500 text-sm font-semibold">
           To run a Distributed Validator you must split your validation key into

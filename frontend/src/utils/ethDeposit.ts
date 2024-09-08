@@ -31,6 +31,7 @@ export const depositETH = async (
     return {
       txHash: hash,
       txReciept: txReciept,
+      pubKey: depositData.pubkey,
     };
   } catch (error) {
     console.error(error);

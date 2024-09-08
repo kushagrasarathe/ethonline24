@@ -10,6 +10,14 @@ import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 export default function DepositEthForm() {
   const { selectedOperators, depositDataFile } = useAppStore();
   const [isDepositing, setIsDepositing] = React.useState(false);
+  const [depositTx, setDepositTx] = React.useState<string>();
+  const [pubKey, setPubKey] = React.useState<string>();
+
+  const beaconChainLink = `https://holesky.beaconcha.in/validator/${pubKey}`;
+  const ssvNetworkLink = `https://holesky.explorer.ssv.network/validators/${pubKey}`;
+  const eigenDashboardLink = `https://holesky.eigenlayer.xyz/restake/ETH`; // TODO: Refer this link for final restaking step
+  const ssvDashboardLink = `https://app.ssv.network/my-account/clusters-dashboard`;
+
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
   const { address } = useAccount();
@@ -31,8 +39,15 @@ export default function DepositEthForm() {
 
       const depositDataFor1 = depositData[0];
       console.log(depositDataFor1);
-      const tx = await depositETH(publicClient, walletClient, depositDataFor1);
-      console.log(`Deposit transaction hash: ${tx?.txHash}`);
+      const depositTx = await depositETH(
+        publicClient,
+        walletClient,
+        depositDataFor1
+      );
+      console.log(`Deposit transaction hash: ${depositTx?.txHash}`);
+      setDepositTx(depositTx?.txHash);
+      setPubKey(depositTx?.pubKey);
+
       setIsDepositing(false);
     } catch (error) {
       console.error(error);

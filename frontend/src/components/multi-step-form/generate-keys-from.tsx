@@ -129,14 +129,26 @@ export default function GenerateKeysFrom() {
               <div>
                 {" "}
                 3. Use the following command to generate validator keys and
-                deposit data:
+                deposit data
               </div>
+              <div>If you don't have a mnemonic : </div>
               <div className="text-indigo-200 font-normal mt-0.5 block bg-gray-800 px-3 py-2 rounded-md text-[13px] w-fit">
                 {`./deposit new-mnemonic --num_validators 1 --chain holesky
                 --eth1_withdrawal_address ${
                   eigenpodAddress ? eigenpodAddress : `[YOUR_EIGENPOD_ADDRESS]`
                 }`}
               </div>
+
+              <div>Or, If you have a mnemonic : </div>
+              <div className="text-indigo-200 font-normal mt-0.5 block bg-gray-800 px-3 py-2 rounded-md text-[13px] w-fit">
+                {`./deposit existing-mnemonic --num_validators 1 --chain holesky
+                  --eth1_withdrawal_address ${
+                    eigenpodAddress
+                      ? eigenpodAddress
+                      : `[YOUR_EIGENPOD_ADDRESS]`
+                  }`}
+              </div>
+
               {!eigenpodAddress && (
                 <div className="text-gray-500 font-normal mt-1 block text-xs">
                   Note: Replace [YOUR_EIGENPOD_ADDRESS] with your EigenPod
