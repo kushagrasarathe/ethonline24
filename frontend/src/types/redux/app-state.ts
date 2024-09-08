@@ -12,7 +12,7 @@ export type TAppState = {
   selectedOperators: SSVOperator[];
   selectedClusterSize: number;
   keyStorePassword: string;
-  keyStoreFile: File | null;
-  depositDataFile: File | null;
+  keyStoreFile: string | null;
+  depositDataFile: string | null;
   validatiorFundingPeriod: ValidatiorFundingPeriod | null;
 };

@@ -57,6 +57,8 @@ export const distributeKeys = async ({
   const keySharesItem = new KeySharesItem();
 
   try {
+    console.log(keystoreFile);
+    console.log(keystorePassword);
     const { publicKey, privateKey } = await ssvKeys.extractKeys(
       keystoreFile,
       keystorePassword
@@ -88,6 +90,7 @@ export const distributeKeys = async ({
         privateKey,
       }
     );
+    console.log("Payload", payload);
 
     keySharesItem.update({
       ownerAddress: walletClient.account?.address!,
@@ -98,8 +101,6 @@ export const distributeKeys = async ({
 
     keyShares.add(keySharesItem);
 
-    console.log(payload);
-    console.log(keyShares.toJson());
     return payload;
   } catch (error) {
     console.log(error);
@@ -156,8 +157,8 @@ export const getNextSSVNonce = async (
 ): Promise<number | undefined> => {
   const params = {
     network: "holesky",
-    nodeUrl: "https://1rpc.io/holesky", // this can be an Infura, or Alchemy node, necessary to query the blockchain
-    contractAddress: SSV_NETWORK_ADDRESS,
+    nodeUrl:
+      "https://eth-holesky.g.alchemy.com/v2/fRc3XT5tByDN2BAbXmrWCjBYtBb_Cq9Z", // this can be an Infura, or Alchemy node, necessary to query the blockchain
     ownerAddress: ownerAddress,
   };
 

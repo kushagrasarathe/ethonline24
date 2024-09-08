@@ -30,15 +30,28 @@ export default function GenerateKeysFrom() {
     event: React.ChangeEvent<HTMLInputElement>,
     fileType: "keystoreFile" | "depositDataFile"
   ) => {
-    const file = event.target.files?.[0] || null;
+    const file = event.target.files?.[0];
+
     setFiles((prevState) => ({ ...prevState, [fileType]: file }));
 
-    if (fileType == "keystoreFile" && file) {
-      dispatch(appActions.setKeyStoreFile(file));
-    }
-    if (fileType == "depositDataFile" && file) {
-      dispatch(appActions.setDepositDataFile(file));
-    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target?.result as string);
+        console.log(json);
+
+        if (fileType == "keystoreFile" && file) {
+          dispatch(appActions.setKeyStoreFile(e.target?.result as string));
+        }
+        if (fileType == "depositDataFile" && file) {
+          dispatch(appActions.setDepositDataFile(e.target?.result as string));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    reader.readAsText(file as Blob);
   };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -51,7 +64,27 @@ export default function GenerateKeysFrom() {
   ) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
+
     setFiles((prevState) => ({ ...prevState, [fileType]: file }));
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target?.result as string);
+        console.log(json);
+
+        if (fileType == "keystoreFile" && file) {
+          dispatch(appActions.setKeyStoreFile(e.target?.result as string));
+        }
+        if (fileType == "depositDataFile" && file) {
+          dispatch(appActions.setDepositDataFile(e.target?.result as string));
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    reader.readAsText(file as Blob);
   };
 
   const handleClick = (inputRef: React.RefObject<HTMLInputElement>) => {

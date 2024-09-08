@@ -66,11 +66,11 @@ const appSlice = createSlice({
       state.keyStorePassword = action.payload;
     },
 
-    setKeyStoreFile: (state, action: PayloadAction<File>) => {
+    setKeyStoreFile: (state, action: PayloadAction<string>) => {
       state.keyStoreFile = action.payload;
     },
 
-    setDepositDataFile: (state, action: PayloadAction<File>) => {
+    setDepositDataFile: (state, action: PayloadAction<string>) => {
       state.depositDataFile = action.payload;
     },
 

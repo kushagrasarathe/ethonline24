@@ -19,18 +19,21 @@ export default function DepositEthForm() {
         throw new Error("Deposit data file not found");
       }
 
-      const depositData = JSON.parse(depositDataFile.toString());
+      const depositData = JSON.parse(depositDataFile);
       console.log("Deposit data: ", depositData);
 
       if (!publicClient || !walletClient?.account) {
         return;
       }
-      const tx = await depositETH(publicClient, walletClient, depositData);
+
+      const depositDataFor1 = depositData[0];
+      const tx = await depositETH(publicClient, walletClient, depositDataFor1);
       console.log(`Deposit transaction hash: ${tx?.txHash}`);
     } catch (error) {
       console.error(error);
     }
   };
+
   return (
     <div className="w-full space-y-5 md:max-w-xl">
       <div className="space-y-4 text-center">
@@ -88,7 +91,11 @@ export default function DepositEthForm() {
           </div>{" "}
           <div>to to fund your validator</div>
         </div>
-        <ButtonIcon className="w-full max-w-xs mx-auto" type="button">
+        <ButtonIcon
+          className="w-full max-w-xs mx-auto"
+          type="button"
+          onClick={handleDepositETH}
+        >
           Deposit
         </ButtonIcon>
       </div>

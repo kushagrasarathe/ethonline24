@@ -99,9 +99,6 @@ export default function FundingPeriodForm() {
 
   const handleRegisterValidator = async () => {
     try {
-      console.log(keyStoreFile?.toString());
-      console.log(keyStorePassword);
-
       // get the selectedOperatorIds
       const operatorIds = selectedOperators?.map((operator) => operator.id!);
 
@@ -115,7 +112,6 @@ export default function FundingPeriodForm() {
         console.log("Keystore file not found");
         return;
       }
-      const keystoreData = keyStoreFile.toString();
 
       // distribute the keys
       if (!publicClient || !walletClient?.account) {
@@ -125,12 +121,17 @@ export default function FundingPeriodForm() {
       const payload = await distributeKeys({
         operatorKeys,
         operatorIds,
-        keystoreFile: keystoreData,
+        keystoreFile: keyStoreFile,
         keystorePassword: keyStorePassword,
         publicClient,
         walletClient,
       });
       console.log(payload);
+
+      if (!payload) {
+        console.log("Payload couldn't be created");
+        return;
+      }
 
       const fees = validatiorFundingPeriod?.totalFunding;
       if (!fees) {
@@ -138,14 +139,15 @@ export default function FundingPeriodForm() {
         return;
       }
       console.log("Registering validator");
+
       // registerValidator call
-      // const tx = await registerValidator(
-      //   publicClient,
-      //   walletClient,
-      //   payload,
-      //   fees
-      // );
-      // console.log(`Registered validator with tx: ${tx?.txHash}`);
+      const tx = await registerValidator(
+        publicClient,
+        walletClient,
+        payload,
+        fees
+      );
+      console.log(`Registered validator with tx: ${tx?.txHash}`);
     } catch (error) {
       console.log(error);
     }
