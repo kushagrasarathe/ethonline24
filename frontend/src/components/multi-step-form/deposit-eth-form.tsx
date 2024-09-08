@@ -18,17 +18,19 @@ export default function DepositEthForm() {
     setIsDepositing(true);
     try {
       if (!depositDataFile) {
-        throw new Error("Deposit data file not found");
+        console.log("Deposit data file not found");
+        return;
       }
 
       const depositData = JSON.parse(depositDataFile);
-      console.log("Deposit data: ", depositData);
+      console.log("Deposit data :", depositData);
 
       if (!publicClient || !walletClient?.account) {
         return;
       }
 
       const depositDataFor1 = depositData[0];
+      console.log(depositDataFor1);
       const tx = await depositETH(publicClient, walletClient, depositDataFor1);
       console.log(`Deposit transaction hash: ${tx?.txHash}`);
       setIsDepositing(false);

@@ -95,6 +95,7 @@ export default function CreateEigenPodForm() {
           cta={
             eigenpodAddress ? (
               <div className="space-y-2">
+                <p className="text-sm ml-2">EigenPOD found with address</p>
                 <ButtonIcon
                   type="button"
                   icon={CopyIcon}

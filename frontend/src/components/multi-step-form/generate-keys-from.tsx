@@ -132,7 +132,7 @@ export default function GenerateKeysFrom() {
                 deposit data:
               </div>
               <div className="text-indigo-200 font-normal mt-0.5 block bg-gray-800 px-3 py-2 rounded-md text-[13px] w-fit">
-                {`./deposit new-mnemonic --num_validators 1 --chain mainnet
+                {`./deposit new-mnemonic --num_validators 1 --chain holesky
                 --eth1_withdrawal_address ${
                   eigenpodAddress ? eigenpodAddress : `[YOUR_EIGENPOD_ADDRESS]`
                 }`}
@@ -143,10 +143,14 @@ export default function GenerateKeysFrom() {
                   address.
                 </div>
               )}
+              <div className="text-gray-500 font-normal mt-2 block text-xs">
+                Note: You would have to enter a password for the keystore file,
+                ensure to remember it & keep it written somewhere safe.
+              </div>
             </div>
             <div className="space-y-1">
               4. After generating the keys, upload the keystore file and deposit
-              data file below.
+              data file below which you can find in the folder "validator_keys".
             </div>
           </div>
         </div>

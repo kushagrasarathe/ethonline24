@@ -18,7 +18,7 @@ export const depositETH = async (
         `0x${depositData.signature}`,
         `0x${depositData.deposit_data_root}`,
       ],
-      value: parseUnits(depositData.amount, 9),
+      value: parseUnits(`${depositData.amount}`, 9),
     });
 
     const hash = await walletClient.writeContract(request);
