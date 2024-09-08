@@ -1,5 +1,6 @@
 # Tesseract
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ScRy6JfgrpQ/0.jpg)](https://www.youtube.com/watch?v=ScRy6JfgrpQ)
+<img width="100%" alt="Screenshot 2024-09-08 at 8 26 20 PM" src="https://github.com/user-attachments/assets/047024b0-69e4-407d-aad6-03d5f2a533ac">
+
 ## Project Description
 With tesseract, users can simply re-stake native ETH without getting involved in the complex process of running a validator and juggling around multiple process to provide economic security to the ETH ecosystem and the same time being able to earn rewards
 
@@ -19,6 +20,8 @@ We are using SSV Network and Eigenlayer to setup the whole process for demo purp
 The operators of the SSV network are the ones running Ethereum validators on users behalf in exchange of a fee in the SSV tokens for a certain period of time. It uses the Secret Shared Validator (SSV) technology to distribute the key shares among operators and using BLS signatures to create validator signature. This was implemented using the "ssv-keys" SDK , SSV APIs and network contracts to handle the distribution of keys and registering a validator.
 
 Furthermore, EigenLayer monitors and manages the balance and the withdrawal status using the EigenPOD which was created by the user using the "EigenPODManager.sol" and is the withdrawal address of the validator setup. This allows users to re stake their Native ETH and at the same time being able to earn rewards from EigenLayer as well.
+
+![app-flow](https://github.com/user-attachments/assets/cd4aab23-ce31-4cc5-bb55-b3fe01fe49f5)
 
 The deposit of 32 ETH is processed using the official beacon chain deposit contract on holesky. The key generation is currently done totally client side by the official CLI from ethereum but can be done with GUI as well.
 
