@@ -47,7 +47,7 @@ export default function Home() {
         className="absolute -top-[430px] left-1/2 transform -translate-x-1/2 -z-0"
       /> */}
       <div className="bg-primary text-white my-auto min-h-[80svh] w-full rounded-3xl py-10 px-20 shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] overflow-hidden">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-14">
           <video
             src={"/videos/all.mp4"}
             autoPlay
