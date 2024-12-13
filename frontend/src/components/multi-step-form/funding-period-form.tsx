@@ -1,21 +1,19 @@
 "use client";
-import React, { useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { useAppDispatch, useAppStore } from "@/redux/hooks";
 import { appActions } from "@/redux/slices/app-slice";
-import { ButtonIcon } from "../ui/button-icon";
-import { Dot } from "lucide-react";
-import { set } from "react-hook-form";
 import { calculateOperatorFees } from "@/utils/ssvFees";
 import {
   approveSSVToken,
   distributeKeys,
   registerValidator,
 } from "@/utils/ssvNetwork";
-import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 import Link from "next/link";
+import React, { useEffect } from "react";
+import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { ButtonIcon } from "../ui/button-icon";
+import { Card, CardContent } from "../ui/card";
 
 export default function FundingPeriodForm() {
   const dispatch = useAppDispatch();

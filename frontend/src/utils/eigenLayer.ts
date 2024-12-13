@@ -4,7 +4,7 @@ import {
   EIGENPOD_MANAGER_ABI,
   EIGNEPOD_MANAGER_ADDRESS,
 } from "@/constants/EigenPodManager";
-import { decodeFunctionResult, PublicClient, WalletClient } from "viem";
+import { PublicClient, WalletClient } from "viem";
 
 export const deployEigenPod = async (
   publicClient: PublicClient,

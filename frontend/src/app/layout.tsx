@@ -4,12 +4,9 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import Provider from "@/components/provider";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
 import { Raleway as Font } from "next/font/google";
-import "./globals.css";
-import EmojiRain from "@/components/canvas-bg";
-import FloatingBackground from "@/components/canvas-bg";
 import { usePathname } from "next/navigation";
+import "./globals.css";
 
 const font = Font({
   subsets: ["latin"],
@@ -38,7 +35,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn(font.className)}>
         <Provider>
-          {/* <FloatingBackground images={images}> */}
           <div
             className={cn(
               "flex min-h-screen w-full flex-col md:gap-y-4",
@@ -51,7 +47,6 @@ export default function RootLayout({
               <Footer />
             </div>
           </div>
-          {/* </FloatingBackground> */}
         </Provider>
       </body>
     </html>

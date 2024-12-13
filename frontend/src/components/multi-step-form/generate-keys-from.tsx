@@ -1,13 +1,12 @@
 "use client";
-import React, { useRef, useState } from "react";
-import { FormCard } from "./eigen-pod-form";
-import { ButtonIcon } from "../ui/button-icon";
-import { Dot, FileCog2, FileIcon, FileJson2 } from "lucide-react";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import Link from "next/link";
 import { useAppDispatch, useAppStore } from "@/redux/hooks";
 import { appActions } from "@/redux/slices/app-slice";
+import { FileCog2, FileJson2 } from "lucide-react";
+import Link from "next/link";
+import React, { useRef, useState } from "react";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { FormCard } from "./eigen-pod-form";
 
 interface FileState {
   keystoreFile: File | null;

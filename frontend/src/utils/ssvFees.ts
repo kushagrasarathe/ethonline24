@@ -7,7 +7,6 @@ import {
   createWalletClient,
   formatUnits,
   http,
-  parseUnits,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { holesky } from "viem/chains";

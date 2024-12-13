@@ -1,22 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { StepperFormKeysType, StepperFormValues } from "@/types/hook-stepper";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button, buttonVariants } from "../ui/button";
 import { STEPPER_FORM_KEYS } from "@/constants/hook-stepper-constants";
-import StepperIndicator from "../ui/stepper-indicator";
-import { TriangleAlert } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import CreateEigenPodForm from "./eigen-pod-form";
-import CreateSsvOperatorsCluster from "./create-ssv-operators-cluster";
-import GenerateKeysFrom from "./generate-keys-from";
-import FundingPeriodForm from "./funding-period-form";
-import DepositEthForm from "./deposit-eth-form";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/redux/hooks";
+import { StepperFormKeysType, StepperFormValues } from "@/types/hook-stepper";
+import { TriangleAlert } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { Button, buttonVariants } from "../ui/button";
+import StepperIndicator from "../ui/stepper-indicator";
+import CreateSsvOperatorsCluster from "./create-ssv-operators-cluster";
+import DepositEthForm from "./deposit-eth-form";
+import CreateEigenPodForm from "./eigen-pod-form";
+import FundingPeriodForm from "./funding-period-form";
+import GenerateKeysFrom from "./generate-keys-from";
 
 function getStepContent(step: number) {
   switch (step) {

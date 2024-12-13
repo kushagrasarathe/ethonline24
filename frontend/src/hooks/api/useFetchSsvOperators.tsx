@@ -2,7 +2,7 @@ import { SSV_OPERATORS } from "@/constants/query";
 import { useAppDispatch } from "@/redux/hooks";
 import { appActions } from "@/redux/slices/app-slice";
 import { SSVOperatorsData } from "@/types/server";
-import { useInfiniteQuery, InfiniteData } from "@tanstack/react-query";
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 
 export const useFetchSsvOperators = () => {

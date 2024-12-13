@@ -1,5 +1,5 @@
 import { DEPOSIT_ABI, DEPOSIT_ADDRESS } from "@/constants/BeaconChainDeposit";
-import { parseEther, parseUnits, PublicClient, WalletClient } from "viem";
+import { parseUnits, PublicClient, WalletClient } from "viem";
 
 export const depositETH = async (
   publicClient: PublicClient,

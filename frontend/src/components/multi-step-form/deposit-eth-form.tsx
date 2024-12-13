@@ -1,12 +1,11 @@
 "use client";
-import React from "react";
-import { Card, CardContent } from "../ui/card";
 import { useAppStore } from "@/redux/hooks";
-import Link from "next/link";
-import { ButtonIcon } from "../ui/button-icon";
 import { depositETH } from "@/utils/ethDeposit";
-import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import React from "react";
+import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { ButtonIcon } from "../ui/button-icon";
 
 export default function DepositEthForm() {
   const { selectedOperators, depositDataFile } = useAppStore();

@@ -2,9 +2,8 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { buttonVariants } from "./ui/button";
 import { usePathname } from "next/navigation";
-import { WalletConnector } from "@privy-io/react-auth";
+import { buttonVariants } from "./ui/button";
 import ConnectWalletButton from "./wallet-connect";
 
 export default function Header() {

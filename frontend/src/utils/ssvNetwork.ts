@@ -1,23 +1,9 @@
-import { SSV_TOKEN_ABI, SSV_TOKEN_ADDRESS } from "@/constants/SSVToken";
-import {
-  createPublicClient,
-  createWalletClient,
-  http,
-  parseEther,
-  PublicClient,
-  WalletClient,
-} from "viem";
-import { SSVKeys, KeyShares, KeySharesItem, SSVKeysException } from "ssv-keys";
 import { SSV_NETWORK_ABI, SSV_NETWORK_ADDRESS } from "@/constants/SSVNetwork";
-import { NonceScanner } from "ssv-scanner";
-import keystore from "./test.keystore.json";
-import { privateKeyToAccount } from "viem/accounts";
-import { holesky } from "viem/chains";
+import { SSV_TOKEN_ABI, SSV_TOKEN_ADDRESS } from "@/constants/SSVToken";
 import axios from "axios";
-import {
-  SSV_NETWORK_VIEWS_ABI,
-  SSV_NETWORK_VIEWS_ADDRESS,
-} from "@/constants/SSVNetworkViews";
+import { KeyShares, KeySharesItem, SSVKeys } from "ssv-keys";
+import { NonceScanner } from "ssv-scanner";
+import { parseEther, PublicClient, WalletClient } from "viem";
 
 // 1. Fetch all the available operators to be shown for creating the cluster
 export const getSSVOperators = async ({ pageParam }: { pageParam: number }) => {
@@ -181,13 +167,6 @@ export const approveSSVToken = async (
   fees: number
 ) => {
   try {
-    // const data = await publicClient.readContract({
-    //   address: SSV_TOKEN_ADDRESS,
-    //   abi: SSV_TOKEN_ABI,
-    //   functionName: "balanceOf",
-    //   args: [walletClient.account?.address!],
-    // });
-
     const { request, result } = await publicClient.simulateContract({
       account: walletClient.account,
       address: SSV_TOKEN_ADDRESS,
@@ -211,51 +190,3 @@ export const approveSSVToken = async (
     console.error(error);
   }
 };
-
-// 4. Fetch SSV token Fees amount
-
-// export const getSSVTokenFees = async (periodInMonth: number) => {
-//   try {
-//     const networkFeeBase = 1 / 12; // for a month in SSV
-//     const minLiquidationCollateral = 1; // in SSV
-
-//     const networkFee = networkFeeBase * periodInMonth;
-//     const totalFee = networkFee + minLiquidationCollateral;
-
-//     return totalFee;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-// const main = async () => {
-//   const account = privateKeyToAccount(`0x${process.env.PRIVATE_KEY}`);
-
-//   const publicClient = createPublicClient({
-//     transport: http(`https://eth-holesky.g.alchemy.com/v2/`),
-//   });
-//   const walletClient = createWalletClient({
-//     chain: holesky,
-//     transport: http(`https://eth-holesky.g.alchemy.com/v2/`),
-//     account: account,
-//   });
-
-//   const operatorKeys = [
-//     "LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdHhHZEx6QVBnR0hhYWVoYUN6a0YKTmdiSmZ6WndCQnlsVFhMdWxPc3ErMzA2NCtBUFNQZHh3YmVXalpPRWpvWC9rRy9EaHNUVmw5eGw0SktUdWxpQwpYdlpMZXRpd3ZuM3RYQTFTKzNGTnJLZ1FjNFBnSHppd1RKL01yMEdyRzFyYWpvYm9VMGVETU5Hbi8zL3BRdk1WCks5bFNuY1QyaFhLbW1PdDdtQUUyK3ltT0JOZDhKU3g5NnA3ajFWdDNwc2d4ZzJMTUU0Nnd2dEpPVyswUWdNVDMKSDNEVjVSTWZWUlU4Z29nUFptbjNYRUR4RUJLZUtmaFZHVjlYNmFhcXkvU2Y4aEo3aG16eVcrQ3F1bkFYYWUySwo5ZDdSL0g0dStZcGovaU5NYkNQNi9GOGlIOCtQbWRyTmtUUFRPakwrb05HZVlNSVB3L1hYVStZbkhzcGp4SjRMCnBRSURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K",
-//     "LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBeFArYkhwYS85WlhJUkJUR0JFWmcKN2hxa1Rra0VRUnZnTFJTV0E3K2cwbHkvVlpUczlFVTBjcXZFNURvUmxseVhrTHNVcnplOTZaOFJPNllmNC9LZQpta3hudk1YeHFUanlITGNkWlhIN1pFMmhWUnZRRVA3TE9hL3RCRHFYYVlHVklZbEYwWWIrVlFhSUczbGg4QmpCClN2ZE9rVERwblJLU1g2Z0ZnTTZVMy9FcFQyVlZRR1Y3VjIrNTF0YlM4WGJpUVQ3OTdwZmpBVEU4VmZseXBPUFIKYU5PREpjWnBlWjFjR0JCMWVJTUlGMlFGMFBCdGQzZ1ZVbDU5RFBHRFRZSUh2VnRrdkhSVHR3a1hOS2EveXV3SApnb1JhZjE4SDZTRy9vazFUM0l4WFYwdk1GdGlvUDJGWVh6UlNzaDBTcnlBR255azB0MElKb0JPMzBtZjFUeXZxCmN3SURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K",
-//     "LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBem9hb09qQWIvVTQ3QitTWit6WUYKcm5TNHBMbUZnL2RYc3pCYWpaSm5zTWJoSzZISHFCdnZwRXZHWHpsU1Q3R3lWTDVQbzVaNEVSQzdPdXBHK2JQWQptQTgwNXZPb3FqYmNkVVlwclgyb1c4K1V1aFZJdUwyd2QvQXJqRDFScUc5eUV6WkRuUVdDdmplaElTQ1NXWFNPCmppbWxTbkpPZTd1Z0hwOXJWRkh3bVlwNGQyOWRBWFc2YTJZdndDRm1oVE9mdUMrSVNESzJTck9JWC9hVnZ5ekgKMU1OY0VmUTNaSGxjYmZQMDdTMVNqN25WYWhqM1hVUEIyMDMxOTRpQU9zcVRaOVFuU3NUamtydGF1MW1SV21aMQpFNm9nYTNJQ2t0YWs5M2FqcElYV3JKUzMwVERtSDhPckpKanVoQm4zaXRrK1o1Szg5SEdXa3FLME1wN2tYOGxPCi93SURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K",
-//     "LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBcWMwUjlWRm9pM1NIeDl2alppb1gKRllwNFhkRjB2emRRRjRLRnozVklYaU5US3Vzck5mSW0zSm1FbWlSQmw4RmRvTmliRC9SZFc1YkFRUzN1UE5MRApGdHZVZ2p3bXBFNEdvcUpmSXZSWENWK2ROamcyNDU5aW44UnlkK0FUbm5qZXRYYWFSN3JNUlIreDRrcVlONkR4CkZoc2llZGgrZG0xTXNtMTRzc2FhMmZ3TExXamlzMDhTZlJZcXhjVHVCd24zUzFFajUwZzVrRG1RRmVyWUxBY2EKSXFOaFNsc0ZJZE50dHFkMUdSR3o0SFFPQmcyQk9iWWdwNEhEZTFLb0xmREdyMHNzRWFZMnRoeVZZOE9FaHh3YgpwUE1NTEk3NmFpUHdJQUsyM1MzWHZLS3ZtRXc1T1FFM0ptWXJrRDFDMTdoRGNWdUxkODV4YnZFSUFENms3b0NJCnB3SURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K",
-//   ];
-//   const operatorIds = [123, 456, 789, 777];
-
-//   await distributeKeys({
-//     operatorKeys,
-//     operatorIds,
-//     keystoreFile: JSON.stringify(keystore),
-//     keystorePassword: "testtest",
-//     publicClient,
-//     walletClient,
-//   });
-// };
-
-// main();

@@ -1,20 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { ButtonIcon } from "../ui/button-icon";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import Link from "next/link";
-import { ArrowDown, CopyIcon } from "lucide-react";
-import CreateSsvOperatorsCluster from "./create-ssv-operators-cluster";
 import { toast } from "@/hooks/use-toast";
 import { useAppDispatch, useAppStore } from "@/redux/hooks";
 import { appActions } from "@/redux/slices/app-slice";
 import { deployEigenPod, getEigenPod } from "@/utils/eigenLayer";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { useAccount, usePublicClient, useWalletClient } from "wagmi";
-import { createWalletClient, custom, zeroAddress } from "viem";
+import { CopyIcon } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { zeroAddress } from "viem";
 import { holesky } from "viem/chains";
+import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { Button } from "../ui/button";
+import { ButtonIcon } from "../ui/button-icon";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import ConnectWalletButton from "../wallet-connect";
 
 interface FormCardProps {
   title: string;
@@ -87,7 +85,6 @@ export default function CreateEigenPodForm() {
 
   return (
     <div className="w-full space-y-6">
-      {/* <div className="text-2xl font-bold">Native Eth Staking</div> */}
       <div className="flex flex-col items-stretch justify-between gap-6">
         <FormCard
           title="Create Eigenpod"
@@ -130,40 +127,6 @@ export default function CreateEigenPodForm() {
             )
           }
         />
-
-        {/* <ArrowDown className="size-12 text-primary mx-auto" />
-        <Card className="bg-primary text-secondary rounded-2xl p-2 opacity-60">
-          <CardHeader className="pb-3">
-            <CardTitle>Connect Validator to EigenPod</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="text-secondary/80 text-sm font-semibold">
-              To give EigenLayer access to your validators, use your staking
-              client to point your validator to your EigenPod address. You may
-              also choose to use your EigenPod as your {`validator's`} fee
-              recipient. This is optional, but will allow you to earn additional
-              Restaking Points. You will need to use the Command Line Interface
-              for this step. Learn more.{" "}
-              <Link
-                target="_blank"
-                rel="noreferrer noopener"
-                className="underline"
-                href={
-                  "https://docs.eigenlayer.xyz/eigenlayer/restaking-guides/restaking-user-guide/native-restaking/create-eigenpod-and-set-withdrawal-credentials/repointing-a-validators-withdrawal-credentials"
-                }
-              >
-                Learn more
-              </Link>
-            </div>
-            <ButtonIcon
-              state="loading"
-              variant={"secondary"}
-              className="uppercase rounded-full px-6 animate-pulse"
-            >
-              Waiting for Connected Validators
-            </ButtonIcon>
-          </CardContent>
-        </Card> */}
       </div>
     </div>
   );
@@ -175,6 +138,7 @@ export const FormCard = ({
   cta,
   children,
 }: FormCardProps) => {
+  const { chainId, isConnected } = useAccount();
   return (
     <Card className="bg-primary text-secondary w-full rounded-2xl p-2">
       <CardHeader className="pb-3">
@@ -187,8 +151,20 @@ export const FormCard = ({
           </div>
         )}
         {children && children}
-
-        {cta && cta}
+        {!isConnected ? (
+          <ConnectWalletButton />
+        ) : chainId !== holesky.id ? (
+          <Button
+            type="button"
+            variant="secondary"
+            disabled
+            className="uppercase rounded-full w-fit px-8"
+          >
+            Switch to Holesky Network Please
+          </Button>
+        ) : (
+          cta
+        )}
       </CardContent>
     </Card>
   );

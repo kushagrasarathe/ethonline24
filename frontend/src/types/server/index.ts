@@ -4,7 +4,7 @@ export interface SSVOperator {
   declared_fee?: string;
   previous_fee?: string;
   fee?: string;
-  public_key: string; // Required field
+  public_key: string;
   owner_address?: string;
   address_whitelist?: string;
   is_private?: boolean;
